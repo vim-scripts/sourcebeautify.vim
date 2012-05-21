@@ -1,0 +1,17 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=4079
+
+Website: https://github.com/michalliu/sourcebeautify.vim
+
+This script can beautify html,css,javascript,json files
+
+To support json file, your need add following code to your vimrc
+au BufRead,BufNewFile *.json setf json
+
+I suggest to use json.vim http://www.vim.org/scripts/script.php?script_id=1945
+
+
+Just hit
+
+<Leader>sb
+
+to see what happens
