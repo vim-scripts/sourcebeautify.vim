@@ -22,7 +22,8 @@ let s:beautifiers = {}
 let s:beautifiers.supportedSourceType={
 \'javascript':1,
 \'css':1,
-\'html':1
+\'html':1,
+\'json':1
 \}
 " sourcetype name alias
 let s:beautifiers.supportedSourceTypeAlias={
@@ -60,7 +61,7 @@ function! s:beautifiers.prepareContext() dict
 
     " not found beautifier
     if !issupport
-        echoerr("sry sourcebeautify doesn't supported ".&filetype." yet")
+        echoerr("sry sourcebeautify doesn't support ".(strlen(&filetype) ? &filetype : "unknown")." file yet")
         return 0
     endif
 
@@ -75,6 +76,10 @@ function! s:beautifiers.prepareContext() dict
     if !len(context)
         let beautifierpath = s:install_dir.'/beautifiers/beautify-'.self.st.'.js'
         " cache executable context
+        if !filereadable(beautifierpath)
+            echoerr "sourcebeautify.vim can't readfile from path ".beautifierpath
+            return 0
+        endif
         let context = join(readfile(beautifierpath),"\n")
         let self.contextCache[self.st]=context
     endif
@@ -105,6 +110,10 @@ function! s:beautifiers.beautify(source) dict
     if !len(runner)
         let runnerpath = s:install_dir.'/beautifiers/beautify-'.self.st.'.run.js'
         " cache runner
+        if !filereadable(runnerpath)
+            echoerr "sourcebeautify.vim can't readfile from path ".runnerpath
+            return "undefined"
+        endif
         let runner = join(readfile(runnerpath),"\n")
         let self.runnerCache[self.st]=runner
     endif
@@ -153,15 +162,14 @@ if !exists("*s:beautify")
             echo "beautifying, please wait..."
             let success = s:beautifiers.prepareContext()
             if success
-                let ret = s:beautifiers.beautify(getline(1,'$'))
-				exec "g/.*/d"
-				let startline=1
-				let retlines = split(ret,"\n")
-				for retline in retlines
-					call setline(startline,retline)
-					let startline+=1
-				endfor
-				exec "normal 1<G>"
+                let @0 = s:beautifiers.beautify(getline(1,'$'))
+                if @0 != "undefined"
+                    :g/.*/d
+                    put!0
+                    :normal gg
+                else
+                    echo "done,but beautifier returns nothing"
+                endif
             else
                 redraw!
             endif

@@ -14,6 +14,9 @@ This plugin requires [jsruntime.vim](https://github.com/michalliu/jsruntime.vim)
 
 then copy __plugin/sourcebeautify__ to __vimfiles/plugin__
 
+Sourcebeautify support json file, but vim can't detect `json` type automaticly. You can add following code to your `vimrc`. I suggest to install [json.vim](http://www.vim.org/scripts/script.php?script_id=1945)
+
+    au BufRead,BufNewFile *.json setf json
 
 Usage
 -----
@@ -36,7 +39,7 @@ Customization
     
         css_beautify(%s,{indent_char:'\t'});
 
-    [javascript beautifier options](https://github.com/einars/js-beautify/blob/master/beautify.js), [html beautifier options](https://github.com/einars/js-beautify/blob/master/beautify-html.js), [css beautifier options](https://github.com/einars/js-beautify/blob/master/beautify-css.js)
+    [javascript beautifier options](https://github.com/einars/js-beautify/blob/master/beautify.js), [html beautifier options](https://github.com/einars/js-beautify/blob/master/beautify-html.js), [css beautifier options](https://github.com/einars/js-beautify/blob/master/beautify-css.js), [jsonlint options](https://github.com/zaach/jsonlint)
 
 2. add more language support
 
@@ -56,3 +59,10 @@ Customization
         \'javascript':['js'],
         \'html':['xhtml','htm']
         \}
+
+Contributor
+-----------
+
+__einars__ - author of  [js-beautify](https://github.com/einars/js-beautify) provide beautifier of `javascript`,`html`,`css` file
+
+__zaach__ - author of  [jsonlint](https://github.com/zaach/jsonlint) provide error checker and beautifier of `JSON` file
